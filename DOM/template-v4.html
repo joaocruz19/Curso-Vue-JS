@@ -1,21 +1,23 @@
-<!-- Usando função para renderizar conteúdo -->
+<!-- Diretiva "v-once" serve para renderizar um elemento apenas uma vez -->
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 <div id="app">
-    <p>{{titulo}}</p>
+    <p v-once>{{titulo}}</p>
     <p>{{saudacao()}}</p>
+    <a v-bind:href="link">Google</a>
 </div>
 
 <script>
     new Vue({
         el: "#app",
         data: {
-            titulo: "Usando Vue JS!"
+            titulo: "Usando Vue JS!!",
+            link: "https://google.com"
         },
         methods: {
             saudacao: function () {
-                console.log(this); // Imprimindo a instância do Vue no console...
+                this.titulo = "Bom dia!!";
                 return this.titulo;
             }
         }

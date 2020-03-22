@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Matador de Monstro</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://unpkg.com/vue"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div id="app">
+      <div class="panel scores">
+        <div class="score">
+          <h1>Jogador</h1>
+          <div class="life-bar">
+            <div
+              class="life"
+              :class="{danger: playerLife < 20}"
+              :style="{width: playerLife + '%'}"
+            ></div>
+          </div>
+          <div>{{playerLife}}%</div>
+        </div>
+        <div class="score">
+          <h1>Monstro</h1>
+          <div class="life-bar">
+            <div
+              class="life"
+              :class="{danger: monsterLife < 20}"
+              :style="{width: monsterLife + '%'}"
+            ></div>
+          </div>
+          <div>{{monsterLife}}%</div>
+        </div>
+      </div>
+      <div class="panel result" v-show="isGameOver">
+        <p v-if="playerLife == 0" :style="{color: 'red'}">
+          Você perdeu! :(
+        </p>
+        <p v-else-if="monsterLife == 0" :style="{color: 'green'}">
+          Você ganhou! :)
+        </p>
+      </div>
+      <div class="panel buttons">
+        <template v-if="running">
+          <button class="btn attack" @click="attack(false)">Ataque</button>
+          <button
+            class="btn special-attack"
+            @click="attack(true)"
+            :disabled="!specialAttacks"
+            :class="{disabled: !specialAttacks}"
+          >
+            Ataque Especial ({{specialAttacks}})
+          </button>
+          <button
+            class="btn heal"
+            @click="healAndHurt"
+            :disabled="!heals"
+            :class="{disabled: !heals}"
+          >
+            Curar ({{heals}})
+          </button>
+          <button class="btn give-up" @click="running = false">Desistir</button>
+        </template>
+        <button v-else class="btn new-game" @click="startGame">
+          Iniciar Jogo
+        </button>
+      </div>
+      <div class="panel logs" v-if="logs.length">
+        <ul>
+          <li class="log" v-for="log in logs" :class="log.cls">
+            {{log.text}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -2,7 +2,7 @@
 	<div id="app">
 		<h1>Registrar Reclamação</h1>
 		<div class="conteudo">
-			<form class="painel">
+			<form class="painel" v-if="!enviado">
 				<div class="cabecalho">Formulário</div>
 				<Rotulo nome="E-mail">
 					<input type="text" v-model.lazy.trim="usuario.email">
@@ -23,22 +23,26 @@
 						value="intermitente"> Intermitente</span>
 				</Rotulo>
 				<Rotulo nome="Qual produto?">
-					<span class="mr-4"><input type="radio"> Web</span>
-					<span class="mr-4"><input type="radio"> Mobile</span>
-					<span><input type="radio"> Outro</span>
+					<span class="mr-4"><input type="radio"  value="web" v-model="produto"> Web</span>
+					<span class="mr-4"><input type="radio" value="Mobile" v-model="produto"> Mobile</span>
+					<span><input type="radio" value="Outro" v-model="produto"> Outro</span>
 				</Rotulo>
 				<Rotulo nome="Prioridade">
-					<select name="" id="">
-						<option></option>
+					<select v-model="prioridade">
+						<option v-for="prioridade in prioridades"
+							:key="prioridade.codigo"
+							:value="prioridade.codigo">
+							{{ prioridade.nome }}
+						</option>
 					</select>
 				</Rotulo>
 				<Rotulo nome="Primeira Reclamação?">
-					<Escolha />
+					<Escolha v-model="escolha" />
 				</Rotulo>
 				<hr>
-				<button>Enviar</button>
+				<button @click.prevent="enviar">Enviar</button>
 			</form>
-			<div class="painel">
+			<div class="painel" v-else>
 				<div class="cabecalho">Resultado</div>
 				<Rotulo nome="E-mail">
 					<span>{{ usuario.email }}</span>
@@ -62,13 +66,14 @@
 					</span>
 				</Rotulo>
 				<Rotulo nome="Qual produto?">
-					<span>???</span>
+					<span>{{ produto }}</span>
 				</Rotulo>
 				<Rotulo nome="Prioridade">
-					<span>???</span>
+					<span>{{ prioridades.find(pr => pr.codigo === prioridade).nome }}</span>
+					<span>{{ prioridade }}</span>
 				</Rotulo>
 				<Rotulo nome="Primeira Reclamação?">
-					<span>???</span>
+					<span>{{ escolha }}</span>
 				</Rotulo>
 			</div>
 		</div>
@@ -87,15 +92,29 @@ export default {
 			return typeof this.usuario.idade;
 		}
 	},
+	methods: {
+		enviar() {
+			this.enviado = true;
+		}
+	},
 	data() {
 		return {
+			produto: "web",
+			prioridades: [
+				{codigo: 1, nome: "Baixa"},
+				{codigo: 2, nome: "Moderada"},
+				{codigo: 3, nome: "Alta"}
+			],
+			prioridade: 1,
 			mensagem: "",
 			caracteristicas: [],
 			usuario: {
 				email: "",
 				senha: "",
 				idade: 25
-			}
+			},
+			escolha: true,
+			enviado: false
 		}
 	}
 }
